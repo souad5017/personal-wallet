@@ -16,6 +16,7 @@ CREATE TABLE wallets (
     month INT NOT NULL,
     year INT NOT NULL,
     budget DECIMAL(10,2) NOT NULL DEFAULT 0,
+     balance DECIMAL(10,2) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (user_id, month, year),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -38,10 +39,30 @@ CREATE TABLE expenses (
     wallet_id INT NOT NULL,
     category_id INT NOT NULL,
     title VARCHAR(150) NOT NULL,
-    amount DECIMAL(10,2) NOT NULL CHECK (amount >= 0),
+    amount DECIMAL(10,2) NOT NULL,
     expense_date DATE NOT NULL,
     is_automatic BOOLEAN DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (wallet_id) REFERENCES wallets(id) ON DELETE CASCADE,
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+
+    CONSTRAINT fk_expense_wallet
+        FOREIGN KEY (wallet_id)
+        REFERENCES wallets(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_expense_category
+        FOREIGN KEY (category_id)
+        REFERENCES categories(id)
+) ENGINE=InnoDB;
+
+
+--@block
+
+CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    wallet_id INT NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    type ENUM('income','expense') NOT NULL,
+    title VARCHAR(255) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (wallet_id) REFERENCES wallets(id) ON DELETE CASCADE
 );

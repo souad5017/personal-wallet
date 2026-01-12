@@ -2,13 +2,8 @@
     "name": "pc/wallit_system",
     "autoload": {
         "psr-4": {
-            "Src\\": "src/"
+            "Pc\\WallitSystem\\": "app/"
         }
     },
-    "authors": [
-        {
-            "name": "Souad"
-        }
-    ],
     "require": {}
 }
